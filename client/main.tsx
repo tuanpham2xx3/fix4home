@@ -55,6 +55,19 @@ import AdminReports from "./pages/admin/Reports";
 // Chat Page
 import ChatPage from "./pages/Chat";
 
+// Service Posts Pages
+import ServicePosts from "./pages/ServicePosts";
+import ServicePostDetailPage from "./pages/ServicePostDetail";
+import CustomerServicePosts from "./pages/customer/ServicePosts";
+
+// Payment Pages
+import CustomerPayments from "./pages/customer/Payments";
+import TechnicianPayments from "./pages/technician/Payments";
+
+// Admin Pages
+import AdminPayments from "./pages/admin/Payments";
+import AdminNotificationsPage from "./pages/admin/Notifications";
+
 const queryClient = new QueryClient();
 
 // Get basename from environment or use default for GitHub Pages
@@ -76,6 +89,8 @@ const App = () => {
                 <Route path="/home" element={<Index />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/services/:id" element={<ServiceDetail />} />
+                <Route path="/service-posts" element={<ServicePosts />} />
+                <Route path="/service-posts/:id" element={<ServicePostDetailPage />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
@@ -146,6 +161,22 @@ const App = () => {
                   element={
                     <ProtectedRoute allowedRoles={["customer"]}>
                       <CustomerReviews />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/customer/service-posts"
+                  element={
+                    <ProtectedRoute allowedRoles={["customer"]}>
+                      <CustomerServicePosts />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/customer/payments"
+                  element={
+                    <ProtectedRoute allowedRoles={["customer"]}>
+                      <CustomerPayments />
                     </ProtectedRoute>
                   }
                 />
@@ -233,6 +264,14 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/technician/payments"
+                  element={
+                    <ProtectedRoute allowedRoles={["technician"]}>
+                      <TechnicianPayments />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Admin Protected Routes */}
                 <Route
@@ -280,6 +319,22 @@ const App = () => {
                   element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                       <AdminReports />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/payments"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                      <AdminPayments />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/notifications"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                      <AdminNotificationsPage />
                     </ProtectedRoute>
                   }
                 />
