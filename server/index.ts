@@ -10,12 +10,22 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Example API routes
-  app.get("/api/ping", (_req, res) => {
-    res.json({ message: "Hello from Express server v2!" });
+  // Add API v1 prefix for all routes
+  const router = express.Router();
+
+  // Example API routes (updated with v1 prefix)
+  router.get("/ping", (_req, res) => {
+    res.json({ 
+      success: true,
+      message: "Fix4Home API Server đang hoạt động",
+      timestamp: new Date().toISOString()
+    });
   });
 
-  app.get("/api/demo", handleDemo);
+  router.get("/demo", handleDemo);
+
+  // Mount router with v1 prefix
+  app.use("/api/v1", router);
 
   return app;
 }
