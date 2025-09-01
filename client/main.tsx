@@ -52,6 +52,9 @@ import AdminOrders from "./pages/admin/Orders";
 import AdminServices from "./pages/admin/Services";
 import AdminReports from "./pages/admin/Reports";
 
+// Chat Page
+import ChatPage from "./pages/Chat";
+
 const queryClient = new QueryClient();
 
 // Get basename from environment or use default for GitHub Pages
@@ -86,6 +89,24 @@ const App = () => {
                 />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
+
+                {/* Chat Routes */}
+                <Route
+                  path="/chat"
+                  element={
+                    <ProtectedRoute allowedRoles={["customer", "technician"]}>
+                      <ChatPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/chat/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["customer", "technician"]}>
+                      <ChatPage />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Customer Protected Routes */}
                 <Route
