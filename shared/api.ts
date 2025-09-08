@@ -5,7 +5,17 @@
  */
 
 /**
- * Example response type for /api/demo
+ * Standard API response format
+ */
+export interface ApiResponse<T = any> {
+  success: boolean;
+  message: string;
+  data: T;
+  timestamp: string;
+}
+
+/**
+ * Example response type for /api/v1/demo
  */
 export interface DemoResponse {
   message: string;

@@ -37,7 +37,6 @@ interface LoginFormData {
   email: string;
   password: string;
   rememberMe: boolean;
-  role: UserRole;
 }
 
 interface LoginErrors {
@@ -48,12 +47,10 @@ interface LoginErrors {
 
 export default function Login() {
   const { login, isAuthenticated, isLoading: authLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState<UserRole>("customer");
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
     rememberMe: false,
-    role: "customer",
   });
   const [errors, setErrors] = useState<LoginErrors>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -120,7 +117,7 @@ export default function Login() {
     setErrors({});
 
     try {
-      await login(formData.email, formData.password, formData.role);
+      await login(formData.email, formData.password);
       // Navigation is handled by AuthContext
     } catch (error) {
       setAttemptCount((prev) => prev + 1);
@@ -160,91 +157,21 @@ export default function Login() {
               <Card className="shadow-xl border-0">
                 <CardHeader className="space-y-1 pb-4">
                   <CardTitle className="text-center text-xl">
-                    Choose Account Type
+                    Đăng nhập
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Tabs
-                    value={activeTab}
-                    onValueChange={(value) => {
-                      const role = value as UserRole;
-                      setActiveTab(role);
-                      handleInputChange("role", role);
-                    }}
-                    className="w-full"
-                  >
-                    <TabsList className="grid w-full grid-cols-3 mb-8">
-                      <TabsTrigger
-                        value="customer"
-                        className="flex items-center space-x-2"
-                        onClick={() => handleInputChange("role", "customer")}
-                      >
-                        <User className="w-4 h-4" />
-                        <span>Customer</span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="technician"
-                        className="flex items-center space-x-2"
-                        onClick={() => handleInputChange("role", "technician")}
-                      >
-                        <Settings className="w-4 h-4" />
-                        <span>Technician</span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="admin"
-                        className="flex items-center space-x-2"
-                        onClick={() => handleInputChange("role", "admin")}
-                      >
-                        <Shield className="w-4 h-4" />
-                        <span>Admin</span>
-                      </TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="customer" className="space-y-0">
-                      <LoginForm
-                        formData={formData}
-                        errors={errors}
-                        showPassword={showPassword}
-                        isLoading={isLoading}
-                        isBlocked={isBlocked}
-                        attemptCount={attemptCount}
-                        userType="customer"
-                        onInputChange={handleInputChange}
-                        onTogglePassword={() => setShowPassword(!showPassword)}
-                        onSubmit={handleSubmit}
-                      />
-                    </TabsContent>
-
-                    <TabsContent value="technician" className="space-y-0">
-                      <LoginForm
-                        formData={formData}
-                        errors={errors}
-                        showPassword={showPassword}
-                        isLoading={isLoading}
-                        isBlocked={isBlocked}
-                        attemptCount={attemptCount}
-                        userType="technician"
-                        onInputChange={handleInputChange}
-                        onTogglePassword={() => setShowPassword(!showPassword)}
-                        onSubmit={handleSubmit}
-                      />
-                    </TabsContent>
-
-                    <TabsContent value="admin" className="space-y-0">
-                      <LoginForm
-                        formData={formData}
-                        errors={errors}
-                        showPassword={showPassword}
-                        isLoading={isLoading}
-                        isBlocked={isBlocked}
-                        attemptCount={attemptCount}
-                        userType="admin"
-                        onInputChange={handleInputChange}
-                        onTogglePassword={() => setShowPassword(!showPassword)}
-                        onSubmit={handleSubmit}
-                      />
-                    </TabsContent>
-                  </Tabs>
+                  <LoginForm
+                    formData={formData}
+                    errors={errors}
+                    showPassword={showPassword}
+                    isLoading={isLoading}
+                    isBlocked={isBlocked}
+                    attemptCount={attemptCount}
+                    onInputChange={handleInputChange}
+                    onTogglePassword={() => setShowPassword(!showPassword)}
+                    onSubmit={handleSubmit}
+                  />
                 </CardContent>
               </Card>
 
@@ -284,7 +211,6 @@ interface LoginFormProps {
   isLoading: boolean;
   isBlocked: boolean;
   attemptCount: number;
-  userType: UserRole;
   onInputChange: (field: keyof LoginFormData, value: any) => void;
   onTogglePassword: () => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -297,7 +223,6 @@ function LoginForm({
   isLoading,
   isBlocked,
   attemptCount,
-  userType,
   onInputChange,
   onTogglePassword,
   onSubmit,
