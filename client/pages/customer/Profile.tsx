@@ -98,7 +98,7 @@ export default function CustomerProfile() {
 
   // User data state
   const [formData, setFormData] = useState({
-    name: user?.name || "",
+    name: user?.fullName || "",
     email: user?.email || "",
     phone: "+1 (555) 123-4567",
     avatarUrl: "",

@@ -252,7 +252,7 @@ export default function TechnicianDashboard() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-foreground mb-2">
-                  Welcome back, {user?.name || "Alex Thompson"}!
+                  Welcome back, {user?.fullName || "Alex Thompson"}!
                 </h1>
                 <p className="text-muted-foreground">
                   Ready to tackle today's challenges

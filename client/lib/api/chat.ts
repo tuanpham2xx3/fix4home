@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from '../api-client';
+import { apiClient, ApiResponse, typedApiCall } from '../api-client';
 import { ChatMessageData } from '../schemas';
 import { ChatMessage, Conversation } from '../socket-client';
 
@@ -8,23 +8,23 @@ export const chatAPI = {
    * Get all conversations for current user
    */
   getConversations: async (): Promise<ApiResponse<Conversation[]>> => {
-    return apiClient.get<ApiResponse<Conversation[]>>('/chat/conversations');
+    return typedApiCall<Conversation[]>(apiClient.get('/chat/conversations'));
   },
 
   /**
    * Get or create conversation with another user
    */
   getOrCreateConversation: async (participantId: number): Promise<ApiResponse<Conversation>> => {
-    return apiClient.post<ApiResponse<Conversation>>('/chat/conversations', {
+    return typedApiCall<Conversation>(apiClient.post('/chat/conversations', {
       participantId
-    });
+    }));
   },
 
   /**
    * Get conversation by ID
    */
   getConversation: async (id: number): Promise<ApiResponse<Conversation>> => {
-    return apiClient.get<ApiResponse<Conversation>>(`/chat/conversations/${id}`);
+    return typedApiCall<Conversation>(apiClient.get(`/chat/conversations/${id}`));
   },
 
   /**
@@ -41,22 +41,22 @@ export const chatAPI = {
     limit: number;
     hasMore: boolean;
   }>> => {
-    return apiClient.get<ApiResponse<any>>(
+    return typedApiCall<any>(apiClient.get(
       `/chat/conversations/${conversationId}/messages?page=${page}&limit=${limit}`
-    );
+    ));
   },
 
   /**
    * Send a text message
    */
   sendMessage: async (data: ChatMessageData): Promise<ApiResponse<ChatMessage>> => {
-    return apiClient.post<ApiResponse<ChatMessage>>(
+    return typedApiCall<ChatMessage>(apiClient.post(
       `/chat/conversations/${data.conversationId}/messages`,
       {
         content: data.content,
         messageType: data.messageType || 'TEXT'
       }
-    );
+    ));
   },
 
   /**
@@ -71,7 +71,7 @@ export const chatAPI = {
     formData.append('file', file);
     formData.append('messageType', messageType);
     
-    return apiClient.post<ApiResponse<ChatMessage>>(
+    return typedApiCall<ChatMessage>(apiClient.post(
       `/chat/conversations/${conversationId}/messages/file`,
       formData,
       {
@@ -79,34 +79,34 @@ export const chatAPI = {
           'Content-Type': 'multipart/form-data',
         },
       }
-    );
+    ));
   },
 
   /**
    * Mark message as read
    */
   markMessageRead: async (conversationId: number, messageId: number): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>(
+    return typedApiCall<null>(apiClient.put(
       `/chat/conversations/${conversationId}/messages/${messageId}/read`
-    );
+    ));
   },
 
   /**
    * Mark all messages in conversation as read
    */
   markAllMessagesRead: async (conversationId: number): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>(
+    return typedApiCall<null>(apiClient.put(
       `/chat/conversations/${conversationId}/read-all`
-    );
+    ));
   },
 
   /**
    * Delete a message
    */
   deleteMessage: async (conversationId: number, messageId: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(
+    return typedApiCall<null>(apiClient.delete(
       `/chat/conversations/${conversationId}/messages/${messageId}`
-    );
+    ));
   },
 
   /**
@@ -124,7 +124,7 @@ export const chatAPI = {
       params.append('conversationId', conversationId.toString());
     }
     
-    return apiClient.get<ApiResponse<any>>(`/chat/search?${params.toString()}`);
+    return apiClient.get(`/chat/search?${params.toString()}`);
   },
 
   /**
@@ -137,21 +137,21 @@ export const chatAPI = {
     lastMessageDate: string;
     messagesByDay: { date: string; count: number }[];
   }>> => {
-    return apiClient.get<ApiResponse<any>>(`/chat/conversations/${conversationId}/stats`);
+    return typedApiCall<any>(apiClient.get(`/chat/conversations/${conversationId}/stats`));
   },
 
   /**
    * Block a user (prevent them from messaging you)
    */
   blockUser: async (userId: number): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/chat/block', { userId });
+    return typedApiCall<null>(apiClient.post('/chat/block', { userId }));
   },
 
   /**
    * Unblock a user
    */
   unblockUser: async (userId: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/chat/block/${userId}`);
+    return typedApiCall<null>(apiClient.delete(`/chat/block/${userId}`));
   },
 
   /**
@@ -163,7 +163,7 @@ export const chatAPI = {
     avatar?: string;
     blockedAt: string;
   }[]>> => {
-    return apiClient.get<ApiResponse<any>>('/chat/blocked');
+    return typedApiCall<any>(apiClient.get('/chat/blocked'));
   },
 
   /**
@@ -174,32 +174,32 @@ export const chatAPI = {
     reason: string,
     messageId?: number
   ): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/chat/report', {
+    return typedApiCall<null>(apiClient.post('/chat/report', {
       conversationId,
       messageId,
       reason
-    });
+    }));
   },
 
   /**
    * Archive a conversation
    */
   archiveConversation: async (conversationId: number): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>(`/chat/conversations/${conversationId}/archive`);
+    return typedApiCall<null>(apiClient.put(`/chat/conversations/${conversationId}/archive`));
   },
 
   /**
    * Unarchive a conversation
    */
   unarchiveConversation: async (conversationId: number): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>(`/chat/conversations/${conversationId}/unarchive`);
+    return typedApiCall<null>(apiClient.put(`/chat/conversations/${conversationId}/unarchive`));
   },
 
   /**
    * Delete a conversation (for current user only)
    */
   deleteConversation: async (conversationId: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/chat/conversations/${conversationId}`);
+    return typedApiCall<null>(apiClient.delete(`/chat/conversations/${conversationId}`));
   },
 
   /**
@@ -211,7 +211,7 @@ export const chatAPI = {
     soundNotifications: boolean;
     emailNotifications: boolean;
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/chat/settings');
+    return typedApiCall<any>(apiClient.get('/chat/settings'));
   },
 
   /**
@@ -223,7 +223,7 @@ export const chatAPI = {
     soundNotifications?: boolean;
     emailNotifications?: boolean;
   }): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>('/chat/settings', settings);
+    return typedApiCall<null>(apiClient.put('/chat/settings', settings));
   }
 };
 

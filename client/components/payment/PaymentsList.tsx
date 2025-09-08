@@ -99,8 +99,8 @@ export default function PaymentsList({
       
       // Load payments
       const paymentsResponse = type === 'received' 
-        ? await paymentsAPI.getReceivedPayments(pagination.page, pagination.limit, filters.status || undefined)
-        : await paymentsAPI.getMyPayments(pagination.page, pagination.limit, filters.status || undefined);
+        ? await paymentsAPI.getReceivedPayments(pagination.page, pagination.limit, filters.status as any)
+        : await paymentsAPI.getMyPayments(pagination.page, pagination.limit, filters.status as any);
       
       if (paymentsResponse.success) {
         let filteredPayments = paymentsResponse.data.payments;

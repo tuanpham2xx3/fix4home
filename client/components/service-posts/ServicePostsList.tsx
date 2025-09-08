@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -180,7 +180,7 @@ export default function ServicePostsList({
       }
 
       // Category filter
-      if (filters.categoryId && post.service.categoryId !== filters.categoryId) {
+      if (filters.categoryId && post.service.categoryId !== Number(filters.categoryId) && post.service.category !== filters.categoryId) {
         return false;
       }
 

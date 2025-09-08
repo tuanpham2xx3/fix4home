@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from '../api-client';
+import { apiClient, ApiResponse, typedApiCall } from '../api-client';
 import { 
   CustomerProfileData,
   TechnicianProfileData,
@@ -54,14 +54,14 @@ export const customerAPI = {
    * Get customer profile
    */
   getProfile: async (): Promise<ApiResponse<CustomerProfile>> => {
-    return apiClient.get<ApiResponse<CustomerProfile>>('/customers/profile');
+    return typedApiCall<CustomerProfile>(apiClient.get('/customers/profile'));
   },
 
   /**
    * Update customer profile
    */
   updateProfile: async (data: CustomerProfileData): Promise<ApiResponse<CustomerProfile>> => {
-    return apiClient.put<ApiResponse<CustomerProfile>>('/customers/profile', data);
+    return typedApiCall<CustomerProfile>(apiClient.put('/customers/profile', data));
   },
 
   /**
@@ -71,46 +71,46 @@ export const customerAPI = {
     const formData = new FormData();
     formData.append('avatar', file);
     
-    return apiClient.post<ApiResponse<{ avatarUrl: string }>>('/customers/avatar', formData, {
+    return typedApiCall<{ avatarUrl: string }>(apiClient.post('/customers/avatar', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    }));
   },
 
   /**
    * Get customer addresses
    */
   getAddresses: async (): Promise<ApiResponse<Address[]>> => {
-    return apiClient.get<ApiResponse<Address[]>>('/customers/addresses');
+    return typedApiCall<Address[]>(apiClient.get('/customers/addresses'));
   },
 
   /**
    * Add new address
    */
   addAddress: async (data: Omit<AddressData, 'id'>): Promise<ApiResponse<Address>> => {
-    return apiClient.post<ApiResponse<Address>>('/customers/addresses', data);
+    return typedApiCall<Address>(apiClient.post('/customers/addresses', data));
   },
 
   /**
    * Update address
    */
   updateAddress: async (id: number, data: Partial<AddressData>): Promise<ApiResponse<Address>> => {
-    return apiClient.put<ApiResponse<Address>>(`/customers/addresses/${id}`, data);
+    return typedApiCall<Address>(apiClient.put(`/customers/addresses/${id}`, data));
   },
 
   /**
    * Delete address
    */
   deleteAddress: async (id: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/customers/addresses/${id}`);
+    return typedApiCall<null>(apiClient.delete(`/customers/addresses/${id}`));
   },
 
   /**
    * Set default address
    */
   setDefaultAddress: async (id: number): Promise<ApiResponse<Address>> => {
-    return apiClient.put<ApiResponse<Address>>(`/customers/addresses/${id}/default`);
+    return typedApiCall<Address>(apiClient.put(`/customers/addresses/${id}/default`));
   },
 
   /**
@@ -124,7 +124,7 @@ export const customerAPI = {
     completedOrders: number;
     monthlySpending: { month: string; amount: number }[];
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/customers/stats');
+    return typedApiCall<any>(apiClient.get('/customers/stats'));
   }
 };
 
@@ -134,14 +134,14 @@ export const technicianAPI = {
    * Get technician profile
    */
   getProfile: async (): Promise<ApiResponse<TechnicianProfile>> => {
-    return apiClient.get<ApiResponse<TechnicianProfile>>('/technicians/me');
+    return typedApiCall<TechnicianProfile>(apiClient.get('/technicians/me'));
   },
 
   /**
    * Update technician profile
    */
   updateProfile: async (data: TechnicianProfileData): Promise<ApiResponse<TechnicianProfile>> => {
-    return apiClient.put<ApiResponse<TechnicianProfile>>('/technicians/me', data);
+    return typedApiCall<TechnicianProfile>(apiClient.put('/technicians/me', data));
   },
 
   /**
@@ -151,32 +151,32 @@ export const technicianAPI = {
     const formData = new FormData();
     formData.append('avatar', file);
     
-    return apiClient.post<ApiResponse<{ avatarUrl: string }>>('/technicians/avatar', formData, {
+    return typedApiCall<{ avatarUrl: string }>(apiClient.post('/technicians/avatar', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    }));
   },
 
   /**
    * Get technician skills
    */
   getSkills: async (): Promise<ApiResponse<number[]>> => {
-    return apiClient.get<ApiResponse<number[]>>('/technicians/me/skills');
+    return typedApiCall<number[]>(apiClient.get('/technicians/me/skills'));
   },
 
   /**
    * Update technician skills
    */
   updateSkills: async (skillIds: number[]): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>('/technicians/me/skills', { skillIds });
+    return typedApiCall<null>(apiClient.put('/technicians/me/skills', { skillIds }));
   },
 
   /**
    * Get technician portfolio
    */
   getPortfolio: async (): Promise<ApiResponse<TechnicianProfile['portfolio']>> => {
-    return apiClient.get<ApiResponse<TechnicianProfile['portfolio']>>('/technicians/me/portfolio');
+    return typedApiCall<TechnicianProfile['portfolio']>(apiClient.get('/technicians/me/portfolio'));
   },
 
   /**
@@ -192,11 +192,11 @@ export const technicianAPI = {
     formData.append('description', data.description);
     formData.append('image', data.image);
     
-    return apiClient.post<ApiResponse<TechnicianProfile['portfolio'][0]>>('/technicians/me/portfolio', formData, {
+    return typedApiCall<TechnicianProfile['portfolio'][0]>(apiClient.post('/technicians/me/portfolio', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    }));
   },
 
   /**
@@ -212,18 +212,18 @@ export const technicianAPI = {
     if (data.description) formData.append('description', data.description);
     if (data.image) formData.append('image', data.image);
     
-    return apiClient.put<ApiResponse<TechnicianProfile['portfolio'][0]>>(`/technicians/me/portfolio/${id}`, formData, {
+    return typedApiCall<TechnicianProfile['portfolio'][0]>(apiClient.put(`/technicians/me/portfolio/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    }));
   },
 
   /**
    * Delete portfolio item
    */
   deletePortfolioItem: async (id: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/technicians/me/portfolio/${id}`);
+    return typedApiCall<null>(apiClient.delete(`/technicians/me/portfolio/${id}`));
   },
 
   /**
@@ -238,14 +238,14 @@ export const technicianAPI = {
     monthlyEarnings: { month: string; amount: number }[];
     ratingDistribution: { rating: number; count: number }[];
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/technicians/me/stats');
+    return typedApiCall<any>(apiClient.get('/technicians/me/stats'));
   },
 
   /**
    * Get public technician profile (for customers to view)
    */
   getPublicProfile: async (id: number): Promise<ApiResponse<TechnicianProfile>> => {
-    return apiClient.get<ApiResponse<TechnicianProfile>>(`/technicians/${id}`);
+    return typedApiCall<TechnicianProfile>(apiClient.get(`/technicians/${id}`));
   },
 
   /**
@@ -275,7 +275,7 @@ export const technicianAPI = {
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
 
-    return apiClient.get<ApiResponse<any>>(`/technicians/search?${queryParams.toString()}`);
+    return apiClient.get(`/technicians/search?${queryParams.toString()}`);
   }
 };
 
@@ -285,7 +285,7 @@ export const userAPI = {
    * Get current user profile (works for any role)
    */
   getCurrentProfile: async (): Promise<ApiResponse<CustomerProfile | TechnicianProfile>> => {
-    return apiClient.get<ApiResponse<any>>('/users/me');
+    return typedApiCall<any>(apiClient.get('/users/me'));
   },
 
   /**
@@ -304,7 +304,7 @@ export const userAPI = {
     };
     language?: string;
   }): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>('/users/settings', settings);
+    return typedApiCall<null>(apiClient.put('/users/settings', settings));
   },
 
   /**
@@ -323,21 +323,21 @@ export const userAPI = {
     };
     language: string;
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/users/settings');
+    return typedApiCall<any>(apiClient.get('/users/settings'));
   },
 
   /**
    * Deactivate account
    */
   deactivateAccount: async (password: string): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>('/users/deactivate', { password });
+    return typedApiCall<null>(apiClient.put('/users/deactivate', { password }));
   },
 
   /**
    * Request account deletion
    */
   requestAccountDeletion: async (password: string, reason?: string): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/users/delete-request', { password, reason });
+    return typedApiCall<null>(apiClient.post('/users/delete-request', { password, reason }));
   }
 };
 

@@ -8,8 +8,8 @@ declare module 'axios' {
 }
 
 // Configuration
-const API_BASE_URL = process.env.VITE_API_URL || 'http://localhost:8100/api/v1';
-const SOCKET_URL = process.env.VITE_SOCKET_URL || 'http://localhost:8100';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8100/api/v1';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:8100';
 
 // Create axios instance
 export const apiClient = axios.create({
@@ -181,9 +181,14 @@ export const handleAPIError = (error: any): ApiError => {
 export const config = {
   API_BASE_URL,
   SOCKET_URL,
-  GOOGLE_MAPS_API_KEY: process.env.VITE_GOOGLE_MAPS_KEY,
-  ENVIRONMENT: process.env.NODE_ENV || 'development',
-  VERSION: process.env.VITE_APP_VERSION || '1.0.0',
+  GOOGLE_MAPS_API_KEY: import.meta.env.VITE_GOOGLE_MAPS_KEY,
+  ENVIRONMENT: import.meta.env.MODE || 'development',
+  VERSION: import.meta.env.VITE_APP_VERSION || '1.0.0',
+};
+
+// Helper function to properly type API responses after interceptor transformation
+export const typedApiCall = <T>(promise: Promise<any>): Promise<ApiResponse<T>> => {
+  return promise as Promise<ApiResponse<T>>;
 };
 
 export default apiClient;

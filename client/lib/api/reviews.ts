@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from '../api-client';
+import { apiClient, ApiResponse, typedApiCall } from '../api-client';
 import { ReviewData } from '../schemas';
 
 // Review response types
@@ -57,28 +57,28 @@ export const reviewsAPI = {
    * Create a review (customer reviews technician)
    */
   createReview: async (data: ReviewData): Promise<ApiResponse<Review>> => {
-    return apiClient.post<ApiResponse<Review>>('/reviews', data);
+    return typedApiCall<Review>(apiClient.post('/reviews', data));
   },
 
   /**
    * Get review by ID
    */
   getReview: async (id: number): Promise<ApiResponse<Review>> => {
-    return apiClient.get<ApiResponse<Review>>(`/reviews/${id}`);
+    return typedApiCall<Review>(apiClient.get(`/reviews/${id}`));
   },
 
   /**
    * Update my review
    */
   updateReview: async (id: number, data: Partial<ReviewData>): Promise<ApiResponse<Review>> => {
-    return apiClient.put<ApiResponse<Review>>(`/reviews/${id}`, data);
+    return typedApiCall<Review>(apiClient.put(`/reviews/${id}`, data));
   },
 
   /**
    * Delete my review
    */
   deleteReview: async (id: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/reviews/${id}`);
+    return typedApiCall<null>(apiClient.delete(`/reviews/${id}`));
   },
 
   /**
@@ -93,7 +93,7 @@ export const reviewsAPI = {
     page: number;
     limit: number;
   }>> => {
-    return apiClient.get<ApiResponse<any>>(`/reviews/my?page=${page}&limit=${limit}`);
+    return typedApiCall<any>(apiClient.get(`/reviews/my?page=${page}&limit=${limit}`));
   },
 
   /**
@@ -108,7 +108,7 @@ export const reviewsAPI = {
     page: number;
     limit: number;
   }>> => {
-    return apiClient.get<ApiResponse<any>>(`/reviews/received?page=${page}&limit=${limit}`);
+    return typedApiCall<any>(apiClient.get(`/reviews/received?page=${page}&limit=${limit}`));
   },
 
   /**
@@ -129,9 +129,9 @@ export const reviewsAPI = {
       ratingDistribution: { rating: number; count: number }[];
     };
   }>> => {
-    return apiClient.get<ApiResponse<any>>(
+    return typedApiCall<any>(apiClient.get(
       `/reviews/technician/${technicianId}?page=${page}&limit=${limit}`
-    );
+    ));
   },
 
   /**
@@ -151,44 +151,44 @@ export const reviewsAPI = {
       totalReviews: number;
     };
   }>> => {
-    return apiClient.get<ApiResponse<any>>(
+    return typedApiCall<any>(apiClient.get(
       `/reviews/service/${serviceId}?page=${page}&limit=${limit}`
-    );
+    ));
   },
 
   /**
    * Respond to a review (technician responds to customer review)
    */
   respondToReview: async (id: number, response: string): Promise<ApiResponse<Review>> => {
-    return apiClient.put<ApiResponse<Review>>(`/reviews/${id}/respond`, { response });
+    return typedApiCall<Review>(apiClient.put(`/reviews/${id}/respond`, { response }));
   },
 
   /**
    * Update review response
    */
   updateReviewResponse: async (id: number, response: string): Promise<ApiResponse<Review>> => {
-    return apiClient.put<ApiResponse<Review>>(`/reviews/${id}/response`, { response });
+    return typedApiCall<Review>(apiClient.put(`/reviews/${id}/response`, { response }));
   },
 
   /**
    * Delete review response
    */
   deleteReviewResponse: async (id: number): Promise<ApiResponse<Review>> => {
-    return apiClient.delete<ApiResponse<Review>>(`/reviews/${id}/response`);
+    return typedApiCall<Review>(apiClient.delete(`/reviews/${id}/response`));
   },
 
   /**
    * Report a review (for inappropriate content)
    */
   reportReview: async (id: number, reason: string): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>(`/reviews/${id}/report`, { reason });
+    return typedApiCall<null>(apiClient.post(`/reviews/${id}/report`, { reason }));
   },
 
   /**
    * Like/Unlike a review
    */
   toggleReviewLike: async (id: number): Promise<ApiResponse<{ liked: boolean; likesCount: number }>> => {
-    return apiClient.post<ApiResponse<{ liked: boolean; likesCount: number }>>(`/reviews/${id}/like`);
+    return typedApiCall<{ liked: boolean; likesCount: number }>(apiClient.post(`/reviews/${id}/like`));
   },
 
   /**
@@ -200,14 +200,14 @@ export const reviewsAPI = {
     reviewsByRating: { rating: number; count: number }[];
     monthlyReviews: { month: string; count: number }[];
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/reviews/my/stats');
+    return typedApiCall<any>(apiClient.get('/reviews/my/stats'));
   },
 
   /**
    * Get my rating statistics (technician)
    */
   getMyRatingStats: async (): Promise<ApiResponse<ReviewStats>> => {
-    return apiClient.get<ApiResponse<ReviewStats>>('/reviews/received/stats');
+    return typedApiCall<ReviewStats>(apiClient.get('/reviews/received/stats'));
   },
 
   /**
@@ -239,7 +239,7 @@ export const reviewsAPI = {
       }
     });
     
-    return apiClient.get<ApiResponse<any>>(`/reviews/search?${searchParams.toString()}`);
+    return apiClient.get(`/reviews/search?${searchParams.toString()}`);
   },
 
   /**
@@ -253,7 +253,7 @@ export const reviewsAPI = {
     averageResponseTime: number; // in hours
     topKeywords: { keyword: string; sentiment: 'positive' | 'negative' | 'neutral'; count: number }[];
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/reviews/insights');
+    return typedApiCall<any>(apiClient.get('/reviews/insights'));
   },
 
   /**
@@ -267,14 +267,14 @@ export const reviewsAPI = {
     completedAt: string;
     daysAgo: number;
   }[]>> => {
-    return apiClient.get<ApiResponse<any>>('/reviews/pending');
+    return typedApiCall<any>(apiClient.get('/reviews/pending'));
   },
 
   /**
    * Get review reminders count
    */
   getReviewRemindersCount: async (): Promise<ApiResponse<{ count: number }>> => {
-    return apiClient.get<ApiResponse<{ count: number }>>('/reviews/reminders/count');
+    return typedApiCall<{ count: number }>(apiClient.get('/reviews/reminders/count'));
   }
 };
 

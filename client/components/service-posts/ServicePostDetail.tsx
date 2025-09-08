@@ -243,7 +243,7 @@ export default function ServicePostDetail({
     }
   };
 
-  const canApply = user?.role === 'technician' && post?.status === 'OPEN';
+  const canApply = user?.role === 'TECHNICIAN' && post?.status === 'OPEN';
   const isOwner = user?.id === post?.customer.id;
   const canManageConsultations = isOwner && post?.status === 'OPEN';
 
@@ -485,7 +485,7 @@ export default function ServicePostDetail({
                     </span>
                   </div>
                   
-                  {user?.role === 'technician' && (
+                  {user?.role === 'TECHNICIAN' && (
                     <Button 
                       size="sm" 
                       className="w-full"

@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse, TokenManager } from '../api-client';
+import { apiClient, ApiResponse, TokenManager, typedApiCall } from '../api-client';
 import { 
   LoginData, 
   RegisterCustomerData, 
@@ -24,7 +24,7 @@ export const authAPI = {
    * User login
    */
   login: async (credentials: LoginData): Promise<ApiResponse<AuthResponse>> => {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', credentials);
+    const response = await apiClient.post('/auth/login', credentials) as ApiResponse<AuthResponse>;
     
     // Store tokens automatically
     if (response.success && response.data) {
@@ -39,7 +39,7 @@ export const authAPI = {
    * Customer registration
    */
   registerCustomer: async (userData: RegisterCustomerData): Promise<ApiResponse<AuthResponse>> => {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', userData);
+    const response = await apiClient.post('/auth/register', userData) as ApiResponse<AuthResponse>;
     
     // Store tokens automatically after registration
     if (response.success && response.data) {
@@ -54,7 +54,7 @@ export const authAPI = {
    * Technician registration
    */
   registerTechnician: async (userData: RegisterTechnicianData): Promise<ApiResponse<AuthResponse>> => {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', userData);
+    const response = await apiClient.post('/auth/register', userData) as ApiResponse<AuthResponse>;
     
     // Note: Technician registration might not auto-login due to approval requirement
     // Only store tokens if login is successful
@@ -71,7 +71,7 @@ export const authAPI = {
    */
   logout: async (): Promise<ApiResponse<null>> => {
     try {
-      const response = await apiClient.post<ApiResponse<null>>('/auth/logout');
+      const response = await apiClient.post('/auth/logout') as ApiResponse<null>;
       return response;
     } finally {
       // Clear tokens regardless of API response
@@ -88,9 +88,9 @@ export const authAPI = {
       throw new Error('No refresh token available');
     }
 
-    const response = await apiClient.post<ApiResponse<RefreshTokenResponse>>('/auth/refresh-token', {
+    const response = await apiClient.post('/auth/refresh-token', {
       refreshToken
-    });
+    }) as ApiResponse<RefreshTokenResponse>;
 
     if (response.success && response.data) {
       const { accessToken, refreshToken: newRefreshToken } = response.data;
@@ -105,62 +105,62 @@ export const authAPI = {
    * Get current user profile
    */
   getCurrentUser: async (): Promise<ApiResponse<UserData>> => {
-    return apiClient.get<ApiResponse<UserData>>('/auth/me');
+    return typedApiCall<UserData>(apiClient.get('/auth/me'));
   },
 
   /**
    * Forgot password
    */
   forgotPassword: async (email: string): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/auth/forgot-password', { email });
+    return typedApiCall<null>(apiClient.post('/auth/forgot-password', { email }));
   },
 
   /**
    * Reset password
    */
   resetPassword: async (token: string, password: string): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/auth/reset-password', {
+    return typedApiCall<null>(apiClient.post('/auth/reset-password', {
       token,
       password
-    });
+    }));
   },
 
   /**
    * Change password (for authenticated users)
    */
   changePassword: async (currentPassword: string, newPassword: string): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>('/auth/change-password', {
+    return typedApiCall<null>(apiClient.put('/auth/change-password', {
       currentPassword,
       newPassword
-    });
+    }));
   },
 
   /**
    * Verify email
    */
   verifyEmail: async (token: string): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/auth/verify-email', { token });
+    return typedApiCall<null>(apiClient.post('/auth/verify-email', { token }));
   },
 
   /**
    * Resend verification email
    */
   resendVerificationEmail: async (): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/auth/resend-verification');
+    return typedApiCall<null>(apiClient.post('/auth/resend-verification'));
   },
 
   /**
    * Check if username is available
    */
   checkUsername: async (username: string): Promise<ApiResponse<{ available: boolean }>> => {
-    return apiClient.get<ApiResponse<{ available: boolean }>>(`/auth/check-username/${username}`);
+    return typedApiCall<{ available: boolean }>(apiClient.get(`/auth/check-username/${username}`));
   },
 
   /**
    * Check if email is available
    */
   checkEmail: async (email: string): Promise<ApiResponse<{ available: boolean }>> => {
-    return apiClient.get<ApiResponse<{ available: boolean }>>(`/auth/check-email/${email}`);
+    return typedApiCall<{ available: boolean }>(apiClient.get(`/auth/check-email/${email}`));
   }
 };
 

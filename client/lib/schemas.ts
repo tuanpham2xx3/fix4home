@@ -30,6 +30,17 @@ export const ServiceRequestStatus = z.enum([
 ]);
 export type ServiceRequestStatusType = z.infer<typeof ServiceRequestStatus>;
 
+// Payment status enum
+export const PaymentStatus = z.enum([
+  'PENDING',
+  'COMPLETED',
+  'CANCELLED',
+  'PROCESSING',
+  'FAILED',
+  'REFUNDED'
+]);
+export type PaymentStatusType = z.infer<typeof PaymentStatus>;
+
 // Authentication schemas
 export const loginSchema = z.object({
   usernameOrEmail: z.string()
@@ -230,7 +241,8 @@ export const serviceSchema = z.object({
   name: z.string(),
   description: z.string(),
   basePrice: z.number(),
-  category: z.string(),
+  category: z.union([z.string(), z.number()]),
+  categoryId: z.number().optional(),
   isActive: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string()
@@ -242,6 +254,9 @@ export const serviceRequestResponseSchema = z.object({
   urgency: ServiceUrgency,
   status: ServiceRequestStatus,
   totalPrice: z.number().optional(),
+  finalPrice: z.number().optional(),
+  estimatedPrice: z.number().optional(),
+  scheduledDate: z.string().optional(),
   preferredDate: z.string().optional(),
   preferredTime: z.string().optional(),
   customer: userSchema,

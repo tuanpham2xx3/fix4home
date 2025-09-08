@@ -189,7 +189,7 @@ export default function Navigation() {
                       )}
                     </div>
                     <div>
-                      <p className="font-medium">{user.name}</p>
+                      <p className="font-medium">{user.fullName}</p>
                       <Badge
                         variant="outline"
                         className={`text-xs ${

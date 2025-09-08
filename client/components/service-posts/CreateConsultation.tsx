@@ -208,7 +208,7 @@ export default function CreateConsultation({
   const budgetComparison = getBudgetComparison();
 
   // Check if user is technician
-  if (user?.role !== 'technician') {
+  if (user?.role !== 'TECHNICIAN') {
     return null;
   }
 

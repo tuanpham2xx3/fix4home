@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from '../api-client';
+import { apiClient, ApiResponse, typedApiCall } from '../api-client';
 import { PaymentData } from '../schemas';
 
 // Payment response types
@@ -66,7 +66,7 @@ export const paymentsAPI = {
    * Get available payment methods
    */
   getPaymentMethods: async (): Promise<ApiResponse<PaymentMethod[]>> => {
-    return apiClient.get<ApiResponse<PaymentMethod[]>>('/payments/methods');
+    return typedApiCall<PaymentMethod[]>(apiClient.get('/payments/methods'));
   },
 
   /**
@@ -77,14 +77,14 @@ export const paymentsAPI = {
     paymentUrl?: string; // For online payment methods
     qrCode?: string; // For QR code payments
   }>> => {
-    return apiClient.post<ApiResponse<any>>('/payments', data);
+    return typedApiCall<any>(apiClient.post('/payments', data));
   },
 
   /**
    * Get payment by ID
    */
   getPayment: async (id: number): Promise<ApiResponse<Payment>> => {
-    return apiClient.get<ApiResponse<Payment>>(`/payments/${id}`);
+    return typedApiCall<Payment>(apiClient.get(`/payments/${id}`));
   },
 
   /**
@@ -109,7 +109,7 @@ export const paymentsAPI = {
       params.append('status', status);
     }
     
-    return apiClient.get<ApiResponse<any>>(`/payments/my?${params.toString()}`);
+    return apiClient.get(`/payments/my?${params.toString()}`);
   },
 
   /**
@@ -134,7 +134,7 @@ export const paymentsAPI = {
       params.append('status', status);
     }
     
-    return apiClient.get<ApiResponse<any>>(`/payments/received?${params.toString()}`);
+    return apiClient.get(`/payments/received?${params.toString()}`);
   },
 
   /**
@@ -145,19 +145,19 @@ export const paymentsAPI = {
     status: Payment['status'],
     notes?: string
   ): Promise<ApiResponse<Payment>> => {
-    return apiClient.put<ApiResponse<Payment>>(`/payments/${id}/status`, {
+    return typedApiCall<Payment>(apiClient.put(`/payments/${id}/status`, {
       status,
       notes
-    });
+    }));
   },
 
   /**
    * Cancel payment (if still pending)
    */
   cancelPayment: async (id: number, reason?: string): Promise<ApiResponse<Payment>> => {
-    return apiClient.put<ApiResponse<Payment>>(`/payments/${id}/cancel`, {
+    return typedApiCall<Payment>(apiClient.put(`/payments/${id}/cancel`, {
       reason
-    });
+    }));
   },
 
   /**
@@ -172,9 +172,9 @@ export const paymentsAPI = {
       requestedAt: string;
     };
   }>> => {
-    return apiClient.post<ApiResponse<any>>(`/payments/${id}/refund`, {
+    return typedApiCall<any>(apiClient.post(`/payments/${id}/refund`, {
       reason
-    });
+    }));
   },
 
   /**
@@ -185,10 +185,10 @@ export const paymentsAPI = {
     amount: number,
     notes?: string
   ): Promise<ApiResponse<Payment>> => {
-    return apiClient.post<ApiResponse<Payment>>(`/payments/${paymentId}/process-refund`, {
+    return typedApiCall<Payment>(apiClient.post(`/payments/${paymentId}/process-refund`, {
       amount,
       notes
-    });
+    }));
   },
 
   /**
@@ -198,24 +198,24 @@ export const paymentsAPI = {
     verified: boolean;
     payment?: Payment;
   }>> => {
-    return apiClient.post<ApiResponse<any>>('/payments/verify', {
+    return typedApiCall<any>(apiClient.post('/payments/verify', {
       transactionId,
       paymentMethod
-    });
+    }));
   },
 
   /**
    * Get payment statistics (customer)
    */
   getMyPaymentStats: async (): Promise<ApiResponse<PaymentStats>> => {
-    return apiClient.get<ApiResponse<PaymentStats>>('/payments/my/stats');
+    return typedApiCall<PaymentStats>(apiClient.get('/payments/my/stats'));
   },
 
   /**
    * Get earnings statistics (technician)
    */
   getEarningsStats: async (): Promise<ApiResponse<PaymentStats>> => {
-    return apiClient.get<ApiResponse<PaymentStats>>('/payments/earnings/stats');
+    return typedApiCall<PaymentStats>(apiClient.get('/payments/earnings/stats'));
   },
 
   /**
@@ -225,7 +225,7 @@ export const paymentsAPI = {
     const response = await apiClient.get(`/payments/${id}/receipt`, {
       responseType: 'blob'
     });
-    return response;
+    return response.data;
   },
 
   /**
@@ -235,7 +235,7 @@ export const paymentsAPI = {
     const response = await apiClient.get(`/payments/${id}/invoice`, {
       responseType: 'blob'
     });
-    return response;
+    return response.data;
   },
 
   /**
@@ -254,7 +254,7 @@ export const paymentsAPI = {
       },
       responseType: 'blob'
     });
-    return response;
+    return response.data;
   }
 };
 
@@ -273,7 +273,7 @@ export const paymentUtils = {
   /**
    * Get payment status color
    */
-  getStatusColor: (status: Payment['status']): string => {
+  getStatusColor: (status: string): string => {
     switch (status) {
       case 'COMPLETED':
         return 'green';

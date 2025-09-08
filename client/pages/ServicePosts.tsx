@@ -61,7 +61,7 @@ export default function ServicePosts() {
         </div>
 
         {/* Create Post Button for Customers */}
-        {user?.role === 'customer' && (
+        {user?.role === 'CUSTOMER' && (
           <div className="flex justify-center">
             <CreateServicePost
               onSuccess={handlePostCreated}

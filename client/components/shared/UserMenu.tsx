@@ -172,11 +172,11 @@ export default function UserMenu() {
       >
         <Avatar className="h-10 w-10 border-2 border-primary/30 shadow-sm">
           <AvatarImage
-            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`}
-            alt={user.name}
+            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.fullName}`}
+            alt={user.fullName}
           />
           <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground font-semibold">
-            {getAvatarFallback(user.name)}
+            {getAvatarFallback(user.fullName)}
           </AvatarFallback>
         </Avatar>
       </Button>
@@ -218,18 +218,18 @@ export default function UserMenu() {
               <div className="relative">
                 <Avatar className="h-16 w-16 border-3 border-primary/20 shadow-lg ring-2 ring-background">
                   <AvatarImage
-                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`}
-                    alt={user.name}
+                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.fullName}`}
+                    alt={user.fullName}
                   />
                   <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-lg font-bold">
-                    {getAvatarFallback(user.name)}
+                    {getAvatarFallback(user.fullName)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-background rounded-full" />
               </div>
               <div className="flex-1 min-w-0 mt-1">
                 <h3 className="text-lg font-bold text-foreground truncate">
-                  {user.name}
+                  {user.fullName}
                 </h3>
                 <p className="text-sm text-muted-foreground/80 truncate mb-2">
                   {user.email}

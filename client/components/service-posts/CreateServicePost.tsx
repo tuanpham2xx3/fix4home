@@ -279,7 +279,7 @@ export default function CreateServicePost({
   };
 
   const filteredServices = selectedCategory 
-    ? services.filter(service => service.categoryId === selectedCategory)
+    ? services.filter(service => service.categoryId === Number(selectedCategory) || service.category === selectedCategory)
     : services;
 
   const content = (

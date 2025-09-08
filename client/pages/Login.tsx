@@ -56,6 +56,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
+  const [userType, setUserType] = useState<"customer" | "technician">("customer");
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -168,9 +169,11 @@ export default function Login() {
                     isLoading={isLoading}
                     isBlocked={isBlocked}
                     attemptCount={attemptCount}
+                    userType={userType}
                     onInputChange={handleInputChange}
                     onTogglePassword={() => setShowPassword(!showPassword)}
                     onSubmit={handleSubmit}
+                    onUserTypeChange={setUserType}
                   />
                 </CardContent>
               </Card>
@@ -211,9 +214,11 @@ interface LoginFormProps {
   isLoading: boolean;
   isBlocked: boolean;
   attemptCount: number;
+  userType: "customer" | "technician";
   onInputChange: (field: keyof LoginFormData, value: any) => void;
   onTogglePassword: () => void;
   onSubmit: (e: React.FormEvent) => void;
+  onUserTypeChange: (type: "customer" | "technician") => void;
 }
 
 function LoginForm({
@@ -223,12 +228,42 @@ function LoginForm({
   isLoading,
   isBlocked,
   attemptCount,
+  userType,
   onInputChange,
   onTogglePassword,
   onSubmit,
+  onUserTypeChange,
 }: LoginFormProps) {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
+      {/* User Type Toggle */}
+      <div className="flex p-1 bg-muted rounded-lg">
+        <button
+          type="button"
+          onClick={() => onUserTypeChange("customer")}
+          className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all ${
+            userType === "customer"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <User className="w-4 h-4 inline mr-2" />
+          Customer
+        </button>
+        <button
+          type="button"
+          onClick={() => onUserTypeChange("technician")}
+          className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all ${
+            userType === "technician"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Settings className="w-4 h-4 inline mr-2" />
+          Technician
+        </button>
+      </div>
+
       {/* Error Alert */}
       {errors.general && (
         <Alert variant="destructive">

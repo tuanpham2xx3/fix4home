@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from '../api-client';
+import { apiClient, ApiResponse, typedApiCall } from '../api-client';
 import { UserData, ServiceData } from '../schemas';
 import { Payment } from './payments';
 import { ServiceRequest } from './services';
@@ -97,7 +97,7 @@ export const adminAPI = {
    * Get admin dashboard statistics
    */
   getStats: async (): Promise<ApiResponse<AdminStats>> => {
-    return apiClient.get<ApiResponse<AdminStats>>('/admin/stats');
+    return typedApiCall<AdminStats>(apiClient.get('/admin/stats'));
   },
 
   /**
@@ -110,7 +110,7 @@ export const adminAPI = {
     api: { status: 'healthy' | 'warning' | 'error'; averageResponseTime: number };
     websocket: { status: 'healthy' | 'warning' | 'error'; activeConnections: number };
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/admin/system/health');
+    return typedApiCall<any>(apiClient.get('/admin/system/health'));
   },
 
   /**
@@ -125,7 +125,7 @@ export const adminAPI = {
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
     
-    return apiClient.get<ApiResponse<SystemReport>>(`/admin/reports?${params.toString()}`);
+    return apiClient.get(`/admin/reports?${params.toString()}`);
   }
 };
 
@@ -155,42 +155,42 @@ export const userManagementAPI = {
       }
     });
     
-    return apiClient.get<ApiResponse<any>>(`/admin/users?${searchParams.toString()}`);
+    return apiClient.get(`/admin/users?${searchParams.toString()}`);
   },
 
   /**
    * Get user by ID
    */
   getUser: async (id: number): Promise<ApiResponse<UserManagement>> => {
-    return apiClient.get<ApiResponse<UserManagement>>(`/admin/users/${id}`);
+    return typedApiCall<UserManagement>(apiClient.get(`/admin/users/${id}`));
   },
 
   /**
    * Update user
    */
   updateUser: async (id: number, data: Partial<UserManagement>): Promise<ApiResponse<UserManagement>> => {
-    return apiClient.put<ApiResponse<UserManagement>>(`/admin/users/${id}`, data);
+    return typedApiCall<UserManagement>(apiClient.put(`/admin/users/${id}`, data));
   },
 
   /**
    * Activate/Deactivate user
    */
   toggleUserStatus: async (id: number, isActive: boolean): Promise<ApiResponse<UserManagement>> => {
-    return apiClient.put<ApiResponse<UserManagement>>(`/admin/users/${id}/status`, { isActive });
+    return typedApiCall<UserManagement>(apiClient.put(`/admin/users/${id}/status`, { isActive }));
   },
 
   /**
    * Delete user
    */
   deleteUser: async (id: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/admin/users/${id}`);
+    return typedApiCall<null>(apiClient.delete(`/admin/users/${id}`));
   },
 
   /**
    * Reset user password
    */
   resetUserPassword: async (id: number): Promise<ApiResponse<{ temporaryPassword: string }>> => {
-    return apiClient.post<ApiResponse<{ temporaryPassword: string }>>(`/admin/users/${id}/reset-password`);
+    return typedApiCall<{ temporaryPassword: string }>(apiClient.post(`/admin/users/${id}/reset-password`));
   },
 
   /**
@@ -209,7 +209,7 @@ export const userManagementAPI = {
     page: number;
     limit: number;
   }>> => {
-    return apiClient.get<ApiResponse<any>>(`/admin/users/${id}/activity?page=${page}&limit=${limit}`);
+    return typedApiCall<any>(apiClient.get(`/admin/users/${id}/activity?page=${page}&limit=${limit}`));
   }
 };
 
@@ -219,32 +219,32 @@ export const technicianManagementAPI = {
    * Get pending technician approvals
    */
   getPendingApprovals: async (): Promise<ApiResponse<TechnicianApproval[]>> => {
-    return apiClient.get<ApiResponse<TechnicianApproval[]>>('/admin/technicians/pending');
+    return typedApiCall<TechnicianApproval[]>(apiClient.get('/admin/technicians/pending'));
   },
 
   /**
    * Get technician approval by ID
    */
   getApproval: async (id: number): Promise<ApiResponse<TechnicianApproval>> => {
-    return apiClient.get<ApiResponse<TechnicianApproval>>(`/admin/technicians/approvals/${id}`);
+    return typedApiCall<TechnicianApproval>(apiClient.get(`/admin/technicians/approvals/${id}`));
   },
 
   /**
    * Approve technician
    */
   approveTechnician: async (id: number, notes?: string): Promise<ApiResponse<TechnicianApproval>> => {
-    return apiClient.put<ApiResponse<TechnicianApproval>>(`/admin/technicians/approvals/${id}/approve`, {
+    return typedApiCall<TechnicianApproval>(apiClient.put(`/admin/technicians/approvals/${id}/approve`, {
       notes
-    });
+    }));
   },
 
   /**
    * Reject technician
    */
   rejectTechnician: async (id: number, reason: string): Promise<ApiResponse<TechnicianApproval>> => {
-    return apiClient.put<ApiResponse<TechnicianApproval>>(`/admin/technicians/approvals/${id}/reject`, {
+    return typedApiCall<TechnicianApproval>(apiClient.put(`/admin/technicians/approvals/${id}/reject`, {
       reason
-    });
+    }));
   },
 
   /**
@@ -268,21 +268,21 @@ export const technicianManagementAPI = {
       }
     });
     
-    return apiClient.get<ApiResponse<any>>(`/admin/technicians?${searchParams.toString()}`);
+    return apiClient.get(`/admin/technicians?${searchParams.toString()}`);
   },
 
   /**
    * Suspend technician
    */
   suspendTechnician: async (id: number, reason: string): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>(`/admin/technicians/${id}/suspend`, { reason });
+    return typedApiCall<null>(apiClient.put(`/admin/technicians/${id}/suspend`, { reason }));
   },
 
   /**
    * Unsuspend technician
    */
   unsuspendTechnician: async (id: number): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>(`/admin/technicians/${id}/unsuspend`);
+    return typedApiCall<null>(apiClient.put(`/admin/technicians/${id}/unsuspend`));
   }
 };
 
@@ -292,7 +292,7 @@ export const serviceManagementAPI = {
    * Get all services
    */
   getServices: async (): Promise<ApiResponse<ServiceData[]>> => {
-    return apiClient.get<ApiResponse<ServiceData[]>>('/admin/services');
+    return typedApiCall<ServiceData[]>(apiClient.get('/admin/services'));
   },
 
   /**
@@ -304,21 +304,21 @@ export const serviceManagementAPI = {
     basePrice: number;
     categoryId: number;
   }): Promise<ApiResponse<ServiceData>> => {
-    return apiClient.post<ApiResponse<ServiceData>>('/admin/services', data);
+    return typedApiCall<ServiceData>(apiClient.post('/admin/services', data));
   },
 
   /**
    * Update service
    */
   updateService: async (id: number, data: Partial<ServiceData>): Promise<ApiResponse<ServiceData>> => {
-    return apiClient.put<ApiResponse<ServiceData>>(`/admin/services/${id}`, data);
+    return typedApiCall<ServiceData>(apiClient.put(`/admin/services/${id}`, data));
   },
 
   /**
    * Delete service
    */
   deleteService: async (id: number): Promise<ApiResponse<null>> => {
-    return apiClient.delete<ApiResponse<null>>(`/admin/services/${id}`);
+    return typedApiCall<null>(apiClient.delete(`/admin/services/${id}`));
   },
 
   /**
@@ -342,7 +342,7 @@ export const serviceManagementAPI = {
       }
     });
     
-    return apiClient.get<ApiResponse<any>>(`/admin/service-requests?${searchParams.toString()}`);
+    return apiClient.get(`/admin/service-requests?${searchParams.toString()}`);
   }
 };
 
@@ -371,17 +371,17 @@ export const paymentManagementAPI = {
       }
     });
     
-    return apiClient.get<ApiResponse<any>>(`/admin/payments?${searchParams.toString()}`);
+    return apiClient.get(`/admin/payments?${searchParams.toString()}`);
   },
 
   /**
    * Process refund
    */
   processRefund: async (paymentId: number, amount: number, notes?: string): Promise<ApiResponse<Payment>> => {
-    return apiClient.post<ApiResponse<Payment>>(`/admin/payments/${paymentId}/refund`, {
+    return typedApiCall<Payment>(apiClient.post(`/admin/payments/${paymentId}/refund`, {
       amount,
       notes
-    });
+    }));
   },
 
   /**
@@ -392,10 +392,10 @@ export const paymentManagementAPI = {
     status: Payment['status'],
     notes?: string
   ): Promise<ApiResponse<Payment>> => {
-    return apiClient.put<ApiResponse<Payment>>(`/admin/payments/${id}/status`, {
+    return typedApiCall<Payment>(apiClient.put(`/admin/payments/${id}/status`, {
       status,
       notes
-    });
+    }));
   }
 };
 
@@ -410,14 +410,14 @@ export const systemConfigAPI = {
     limits: { maxFileSize: number; maxImagesPerPost: number };
     notifications: { emailEnabled: boolean; smsEnabled: boolean; pushEnabled: boolean };
   }>> => {
-    return apiClient.get<ApiResponse<any>>('/admin/settings');
+    return typedApiCall<any>(apiClient.get('/admin/settings'));
   },
 
   /**
    * Update system settings
    */
   updateSettings: async (settings: Record<string, any>): Promise<ApiResponse<null>> => {
-    return apiClient.put<ApiResponse<null>>('/admin/settings', settings);
+    return typedApiCall<null>(apiClient.put('/admin/settings', settings));
   },
 
   /**
@@ -430,7 +430,7 @@ export const systemConfigAPI = {
     targetUsers?: 'all' | 'customers' | 'technicians' | 'admins';
     userIds?: number[];
   }): Promise<ApiResponse<null>> => {
-    return apiClient.post<ApiResponse<null>>('/admin/notifications/send', data);
+    return typedApiCall<null>(apiClient.post('/admin/notifications/send', data));
   },
 
   /**
@@ -452,7 +452,7 @@ export const systemConfigAPI = {
     const response = await apiClient.get(`/admin/export?${params.toString()}`, {
       responseType: 'blob'
     });
-    return response;
+    return response.data;
   }
 };
 

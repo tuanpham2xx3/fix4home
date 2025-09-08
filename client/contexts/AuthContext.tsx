@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     try {
       const response = await authAPI.login({
-        email: email.trim(),
+        usernameOrEmail: email.trim(),
         password: password.trim()
       });
 
